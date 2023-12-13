@@ -44,4 +44,4 @@ jobs:
       # Push Image to registry if all the steps pass
       - name: Docker Push
         run: |
-          docker push mechinsae/malware:${{ github.run_number }} 
+          docker push mechinsae/malware:${{ github.run_number }}
