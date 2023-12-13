@@ -44,4 +44,4 @@ jobs:
       # Push Image to registry if all the steps pass
       - name: Docker Push
         run: |
-          docker push ultimatetestdrive/ubuntu:${{ github.run_number }} 
+          docker push ultimatetestdrive/ubuntu:${{ github.run_number }}
