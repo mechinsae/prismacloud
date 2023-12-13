@@ -1,0 +1,47 @@
+name: Prisma Cloud Docker Image Scan
+on:
+  pull_request:
+    branches:
+      - 'main'
+
+jobs:
+  Docker-Image-Scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      # Login to Docker Registry
+      - name: Docker login
+        uses: docker/login-action@v2
+        with:
+          username: mechinsae
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Build Docker image
+      - name: Docker Build
+        uses: docker/build-push-action@v4
+        with:
+          push: false
+          tags: mechinsae/malware:${{ github.run_number }}
+
+      # Runs Docker image scan
+      - name: Docker Image Scan
+        id: scan
+        uses: PaloAltoNetworks/prisma-cloud-scan@v1
+        with:
+          pcc_console_url: ${{ secrets.PCC_CONSOLE_URL }}
+          pcc_user: ${{ secrets.PCC_ACCESS_KEY_ID }}
+          pcc_pass: ${{ secrets.PCC_SECRET_ACCESS_KEY }}
+          image_name: mechinsae/malware:${{ github.run_number }}
+
+      # Runs twistcli sandbox
+      - name: Docker Image Sandbox Scan
+        run: |
+          curl --progress-bar -L --header "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoicmF5bW9uZC5wYXJrQHBhbG9hbHRvbmV0d29ya3MuY29tIiwicm9sZSI6ImFkbWluIiwicm9sZVBlcm1zIjpbWzI1NSwyNTUsMjU1LDI1NSwyNTUsMTI3LDFdLFsyNTUsMjU1LDI1NSwyNTUsMjU1LDEyNywxXV0sInNlc3Npb25UaW1lb3V0U2VjIjo1ODQsInNhYXNUb2tlbiI6ImV5SmhiR2NpT2lKSVV6STFOaUo5LmV5SnpkV0lpT2lKeVlYbHRiMjVrTG5CaGNtdEFjR0ZzYjJGc2RHOXVaWFIzYjNKcmN5NWpiMjBpTENKelpYSjJhV05sVlhOaFoyVlBibXg1SWpwMGNuVmxMQ0ptYVhKemRFeHZaMmx1SWpwbVlXeHpaU3dpY0hKcGMyMWhTV1FpT2lJeE1EVTNOVFl4TmpnNE5URTJOek0wT1RjMklpd2lhWEJCWkdSeVpYTnpJam9pTXpRdU9EY3VNVE0zTGpFME1TSXNJbWx6Y3lJNkltaDBkSEJ6T2k4dllYQnBMbk5uTG5CeWFYTnRZV05zYjNWa0xtbHZJaXdpY21WemRISnBZM1FpT2pBc0luVnpaWEpTYjJ4bFZIbHdaVVJsZEdGcGJITWlPbnNpYUdGelQyNXNlVkpsWVdSQlkyTmxjM01pT21aaGJITmxmU3dpZFhObGNsSnZiR1ZVZVhCbFRtRnRaU0k2SWxONWMzUmxiU0JCWkcxcGJpSXNJbWx6VTFOUFUyVnpjMmx2YmlJNlptRnNjMlVzSW14aGMzUk1iMmRwYmxScGJXVWlPakUzTURJMU1EWXlPREV4TlRnc0ltRjFaQ0k2SW1oMGRIQnpPaTh2WVhCcExuTm5MbkJ5YVhOdFlXTnNiM1ZrTG1sdklpd2lkWE5sY2xKdmJHVlVlWEJsU1dRaU9qRXNJbUYxZEdndGJXVjBhRzlrSWpvaVVFRk9YMU5CVFV3eUlpd2ljMlZzWldOMFpXUkRkWE4wYjIxbGNrNWhiV1VpT2lKRElGQnNZWFJtYjNKdElFTnZJRXgwWkNBdElEWXpNVFkxTkRFMk16WXhNVE0zTURZek1EUWlMQ0p6WlhOemFXOXVWR2x0Wlc5MWRDSTZNekFzSW5WelpYSlNiMnhsU1dRaU9pSmxZakptTXpRNVlTMWlNVE14TFRSbU1ERXRPVE15WkMwelpHTTJNRGRsTWpRMk5XSWlMQ0pvWVhORVpXWmxibVJsY2xCbGNtMXBjM05wYjI1eklqcDBjblZsTENKbGVIQWlPakUzTURJMU1EYzFPRGtzSW1saGRDSTZNVGN3TWpVd05qazRPU3dpZFhObGNtNWhiV1VpT2lKeVlYbHRiMjVrTG5CaGNtdEFjR0ZzYjJGc2RHOXVaWFIzYjNKcmN5NWpiMjBpTENKMWMyVnlVbTlzWlU1aGJXVWlPaUpUZVhOMFpXMGdRV1J0YVc0aWZRLkhWQTBHcmxsb09aX0VSOVloa054TFQ5Z0ctQmhTNktHclE5MUlOZTZhdFEiLCJpc3MiOiJ0d2lzdGxvY2siLCJleHAiOjE3MDI1MTA2MDV9.ulPxUOJFOtzqMYQEbTdG4vaSY2ueMT1EkyKdR4qevZ4" https://asia-southeast1.cloud.twistlock.com/aws-singapore-961146753/api/v1/util/twistcli > twistcli
+          chmod +x twistcli
+          sudo ./twistcli sandbox --address ${{ secrets.PCC_CONSOLE_URL }} --user ${{ secrets.PCC_ACCESS_KEY_ID }} --password ${{ secrets.PCC_SECRET_ACCESS_KEY }} --analysis-duration 2m ultimatetestdrive/ubuntu:${{ github.run_number }}
+
+      # Push Image to registry if all the steps pass
+      - name: Docker Push
+        run: |
+          docker push mechinsae/malware:${{ github.run_number }}
