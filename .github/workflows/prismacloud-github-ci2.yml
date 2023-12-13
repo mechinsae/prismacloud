@@ -14,7 +14,7 @@ jobs:
       - name: Docker login
         uses: docker/login-action@v2
         with:
-          username: ultimatetestdrive
+          username: mechinsae
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       # Build Docker image
@@ -32,7 +32,7 @@ jobs:
           pcc_console_url: ${{ secrets.PCC_CONSOLE_URL }}
           pcc_user: ${{ secrets.PCC_ACCESS_KEY_ID }}
           pcc_pass: ${{ secrets.PCC_SECRET_ACCESS_KEY }}
-          image_name: ultimatetestdrive/ubuntu:${{ github.run_number }}
+          image_name: mechinsae/malware:${{ github.run_number }}
 
       # Runs twistcli sandbox
       - name: Docker Image Sandbox Scan
@@ -44,4 +44,4 @@ jobs:
       # Push Image to registry if all the steps pass
       - name: Docker Push
         run: |
-          docker push ultimatetestdrive/ubuntu:${{ github.run_number }}
+          docker push mechinsae/malware:${{ github.run_number }}
