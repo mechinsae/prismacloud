@@ -22,7 +22,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: false
-          tags: ultimatetestdrive/ubuntu:${{ github.run_number }}
+          tags: mechinsae/malware:${{ github.run_number }}
 
       # Runs Docker image scan
       - name: Docker Image Scan
