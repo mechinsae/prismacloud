@@ -36,4 +36,4 @@ jobs:
               /usr/bin/chmod a+x /home/runner/work/_temp/
       
       - name: Sandbox
-        run: sudo ./twistcli sandbox --address ${{ secrets.PCC_CONSOLE_URL }} --user ${{ secrets.PCC_USER }} --password ${{ secrets.PCC_PASS }} --analysis-duration 2m $IMAGE_NAME
+        run: sudo ./twistcli sandbox --address ${{ secrets.PCC_CONSOLE_URL }} --token '$PCC_API_TOKEN' --user ${{ secrets.PCC_USER }} --password ${{ secrets.PCC_PASS }} --analysis-duration 2m $IMAGE_NAME
