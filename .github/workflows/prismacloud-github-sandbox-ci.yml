@@ -36,4 +36,4 @@ jobs:
       
       - name: Scan the dynamic image analysis
         run: sudo ./twistcli sandbox --address ${{ secrets.PCC_CONSOLE_URL }} --token ${{ secrets.PCC_API_TOKEN }} --user ${{ secrets.PCC_USER }} --password ${{ secrets.PCC_PASS }} --analysis-duration 2m --exit-on-error --output-file $PWD/test_result.txt  $IMAGE_NAME
-             cat $PWD/test_result.txttest_result.txt 
+             cat $PWD/test_result.txt
