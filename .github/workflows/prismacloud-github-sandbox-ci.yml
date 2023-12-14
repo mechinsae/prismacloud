@@ -36,3 +36,15 @@ jobs:
       
       - name: Scan the dynamic image analysis
         run: sudo ./twistcli sandbox --address ${{ secrets.PCC_CONSOLE_URL }} --token ${{ secrets.PCC_API_TOKEN }} --user ${{ secrets.PCC_USER }} --password ${{ secrets.PCC_PASS }} --analysis-duration 2m --exit-on-error  $IMAGE_NAME
+
+      - name: Check for specific string
+        run: |
+          if grep -q "PASS" ./path/to/${{ github.workspace }} ; then
+            echo "Specific string found!"
+            exit 1
+          else
+            echo "Specific string not found."
+          fi
+
+
+
