@@ -36,7 +36,6 @@ jobs:
       
       - name: Scan the dynamic image analysis
         run: | 
-          mkdir -p /tmp
           sudo ./twistcli sandbox --address ${{ secrets.PCC_CONSOLE_URL }} --token ${{ secrets.PCC_API_TOKEN }} --user ${{ secrets.PCC_USER }} --password ${{ secrets.PCC_PASS }} --analysis-duration 10s --exit-on-error  $IMAGE_NAME | tee -a output
           if grep -i 'Sandbox analysis verdict: FAIL' ${{ github.workspace }}/output ; then
             echo "The dynamic image analysis result is FAIL."
