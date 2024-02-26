@@ -5,6 +5,11 @@ on: [push, pull_request]
 env:
   IMAGE_NAME: ${{ github.repository }}:${{ github.sha }}
 
+services:
+  docker:
+    image: docker:19.03-dind
+    options: --privileged
+
 jobs:
   # Jobs are ran independently from each other, so build and scan needs to be in a single job.
   build-and-scan:
@@ -33,4 +38,4 @@ jobs:
           docker build -t $IMAGE_NAME .
 
       - name: Scan the image
-        run: ./twistcli images scan --docker-address http://docker:2375 --address $PCC_CONSOLE_URL --user $PCC_USER --password $PCC_PASS --details $IMAGE_NAME 
+        run: ./twistcli images scan --docker-address http://docker:2375 --address $PCC_CONSOLE_URL --user $PCC_USER --password $PCC_PASS --details $IMAGE_NAME
