@@ -41,5 +41,5 @@ jobs:
             echo "The dynamic image analysis result is FAIL."
             exit 1
           else
-            echo "The dynamic image analysis result is PASS"
+            echo "The dynamic image analysis result is PASS" 
           fi
