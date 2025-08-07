@@ -33,7 +33,9 @@ jobs:
 
       - name: Scan the image
         run: ./twistcli images scan --address ${{ secrets.PCC_CONSOLE_URL }} --user ${{ secrets.PCC_USER }} --password ${{ secrets.PCC_PASS }} --details $IMAGE_NAME
-      
+
+
+# 추가 부분      
       - name: Scan the dynamic image analysis
         run: | 
           sudo ./twistcli sandbox --address ${{ secrets.PCC_CONSOLE_URL }} --token ${{ secrets.PCC_API_TOKEN }} --user ${{ secrets.PCC_USER }} --password ${{ secrets.PCC_PASS }} --analysis-duration 10s --exit-on-error  $IMAGE_NAME | tee -a output
@@ -41,5 +43,5 @@ jobs:
             echo "The dynamic image analysis result is FAIL."
             exit 1
           else
-            echo "The dynamic image analysis result is PASS" 
+            echo "The dynamic image analysis result is PASS"
           fi
