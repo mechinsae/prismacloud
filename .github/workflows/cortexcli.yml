@@ -20,7 +20,7 @@ jobs:
       - name: Download twistcli from the Prisma Cloud Compute Console
         run: |
           crtx_resp=$(curl -s "https://api-japac-cxsiamp.xdr.jp.paloaltonetworks.com/public_api/v1/unified-cli/releases/download-link?os=linux&architecture=amd64" -H "x-xdr-auth-id: 41" -H "Authorization: 4V1VvdWB6SEYq12CzlgjAA1U2E0oPlFvUqdTuprVHSecdgv4793WCasdL3f5X2PzHBWN2TF1iK6cGK3ZkEwyxsbc1QH3PVS7zNkEjtl7M2ZYhs9FSR42tLczF0vBChNL") && crtx_url=$(echo $crtx_resp | jq -r ".signed_url") && crtx_file=$(echo $crtx_resp | jq -r ".file_name") && curl -o $crtx_file $crtx_url 
-          chmod a+x ./twistcli
+          chmod a+x ./cortexcli
 
       - name: Build the image
         run: |
