@@ -24,6 +24,7 @@ jobs:
 
       - name: Build the image
         run: |
+          mkdir -p /home/runner/work/raymond/raymond/
           cat <<EOF | tee /home/runner/work/raymond/raymond/Dockerfile
           FROM nginx:1.21
           EXPOSE 80
