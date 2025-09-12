@@ -36,4 +36,4 @@ jobs:
           docker build -t $IMAGE_NAME /home/runner/work/raymond/raymond/
 
       - name: Scan the image
-        run: ./cortexcli --api-base-url "https://api-japac-cxsiamp.xdr.jp.paloaltonetworks.com" --api-key-id "41"  --api-key "4V1VvdWB6SEYq12CzlgjAA1U2E0oPlFvUqdTuprVHSecdgv4793WCasdL3f5X2PzHBWN2TF1iK6cGK3ZkEwyxsbc1QH3PVS7zNkEjtl7M2ZYhs9FSR42tLczF0vBChNL" image scan "ubuntu_test:10"
+        run: ./cortexcli --api-base-url "https://api-japac-cxsiamp.xdr.jp.paloaltonetworks.com" --api-key-id "41"  --api-key "4V1VvdWB6SEYq12CzlgjAA1U2E0oPlFvUqdTuprVHSecdgv4793WCasdL3f5X2PzHBWN2TF1iK6cGK3ZkEwyxsbc1QH3PVS7zNkEjtl7M2ZYhs9FSR42tLczF0vBChNL" image scan "$IMAGE_NAME"
