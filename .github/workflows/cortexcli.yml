@@ -1,0 +1,38 @@
+name: Prisma Cloud Compute Image Scan
+
+on: [push, pull_request]
+
+env:
+  IMAGE_NAME: ${{ github.repository }}:${{ github.sha }}
+
+jobs:
+  # Jobs are ran independently from each other, so build and scan needs to be in a single job.
+  build-and-scan:
+    name: Build and scan image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+        # Defaults are sufficient generally
+        # https://github.com/actions/checkout#usage
+
+      - name: Download twistcli from the Prisma Cloud Compute Console
+        run: |
+          crtx_resp=$(curl -s "https://api-japac-cxsiamp.xdr.jp.paloaltonetworks.com/public_api/v1/unified-cli/releases/download-link?os=linux&architecture=amd64" -H "x-xdr-auth-id: 41" -H "Authorization: 4V1VvdWB6SEYq12CzlgjAA1U2E0oPlFvUqdTuprVHSecdgv4793WCasdL3f5X2PzHBWN2TF1iK6cGK3ZkEwyxsbc1QH3PVS7zNkEjtl7M2ZYhs9FSR42tLczF0vBChNL") && crtx_url=$(echo $crtx_resp | jq -r ".signed_url") && crtx_file=$(echo $crtx_resp | jq -r ".file_name") && curl -o $crtx_file $crtx_url 
+          chmod a+x ./twistcli
+
+      - name: Build the image
+        run: |
+          cat <<EOF | tee /home/runner/work/raymond/raymond/Dockerfile
+          FROM nginx:1.21
+          EXPOSE 80
+          RUN apt-get update && apt-get upgrade -y
+          RUN useradd -ms /bin/bash myuser
+          USER myuser
+          CMD ["nginx", "-g", "daemon off;"]
+          EOF
+          docker build -t $IMAGE_NAME .
+
+      - name: Scan the image
+        run: ./cortexcli --api-base-url "https://api-japac-cxsiamp.xdr.jp.paloaltonetworks.com" --api-key-id "41"  --api-key "4V1VvdWB6SEYq12CzlgjAA1U2E0oPlFvUqdTuprVHSecdgv4793WCasdL3f5X2PzHBWN2TF1iK6cGK3ZkEwyxsbc1QH3PVS7zNkEjtl7M2ZYhs9FSR42tLczF0vBChNL" image scan "ubuntu_test:10"
