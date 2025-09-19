@@ -33,7 +33,7 @@ jobs:
           USER myuser
           CMD ["nginx", "-g", "daemon off;"]
           EOF
-          docker build -t $IMAGE_NAME /home/runner/work/raymond/raymond/
+          docker build -t $IMAGE_NAME /home/runner/work/raymond/raymond/ 
 
       - name: Scan the image
         run: ./cortexcli --api-base-url "https://api-japac-cxsiamp.xdr.jp.paloaltonetworks.com" --api-key-id "${{ secrets.PCC_USER }}"  --api-key "${{ secrets.PCC_PASS }}" image scan "$IMAGE_NAME"
