@@ -30,7 +30,7 @@ jobs:
         run: |
           mkdir -p /home/runner/work/raymond/raymond/
           cat <<EOF | tee /home/runner/work/raymond/raymond/Dockerfile
-          FROM nginx:1.29
+          FROM nginx:1.27
           EXPOSE 80
           CMD ["nginx", "-g", "daemon off;"]
           EOF
