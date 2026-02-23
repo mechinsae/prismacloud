@@ -32,7 +32,7 @@ jobs:
         run: |
           mkdir -p /home/runner/work/raymond/raymond/
           cat <<EOF | tee /home/runner/work/raymond/raymond/Dockerfile
-          FROM nginx:latest
+          FROM nginx:1.18
           EXPOSE 80
           RUN apt-get update && apt-get upgrade -y
           RUN useradd -ms /bin/bash myuser
