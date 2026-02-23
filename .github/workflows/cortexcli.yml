@@ -32,7 +32,7 @@ jobs:
         run: |
           mkdir -p /home/runner/work/raymond/raymond/
           cat <<EOF | tee /home/runner/work/raymond/raymond/Dockerfile
-          FROM busybox:latest
+          FROM nginx:latest
           EXPOSE 80
           USER myuser
           CMD ["nginx", "-g", "daemon off;"]
