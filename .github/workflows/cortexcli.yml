@@ -32,10 +32,8 @@ jobs:
         run: |
           mkdir -p /home/runner/work/raymond/raymond/
           cat <<EOF | tee /home/runner/work/raymond/raymond/Dockerfile
-          FROM busybox:1.26
+          FROM nginx:1.21
           EXPOSE 80
-          RUN apt-get update && apt-get upgrade -y
-          RUN useradd -ms /bin/bash myuser
           USER myuser
           CMD ["nginx", "-g", "daemon off;"]
           EOF
