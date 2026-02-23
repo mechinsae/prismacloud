@@ -26,7 +26,6 @@ jobs:
           crtx_resp=$(curl -s "https://api-japac-cxsiamp.xdr.jp.paloaltonetworks.com/public_api/v1/unified-cli/releases/download-link?os=linux&architecture=amd64" -H "x-xdr-auth-id: ${{ secrets.PCC_USER }}" -H "Authorization: ${{ secrets.PCC_PASS }}") && crtx_url=$(echo $crtx_resp | jq -r ".signed_url") && crtx_file=$(echo $crtx_resp | jq -r ".file_name") && curl -o $crtx_file "$crtx_url" 
           # 다운로드된 파일의 이름을 cortexcli로 통일하거나 원래 이름에 실행 권한을 줍니다.
           # 기존 코드의 오류 방지를 위해 다운로드한 파일을 cortexcli로 이름 변경합니다.
-          mv "$crtx_file" ./cortexcli
           chmod a+x ./cortexcli
 
       - name: Build the image
