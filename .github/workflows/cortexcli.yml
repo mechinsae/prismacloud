@@ -13,13 +13,20 @@ jobs:
 
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v2
-        # Defaults are sufficient generally
-        # https://github.com/actions/checkout#usage
+        uses: actions/checkout@v4 # 최신 버전(v4)으로 업데이트하는 것을 권장합니다.
 
-      - name: Download twistcli from the Prisma Cloud Compute Console
+      # [추가됨] Cortex CLI(cwp.so)가 요구하는 의존성 라이브러리를 설치합니다.
+      - name: Install Hyperscan dependency
         run: |
-          crtx_resp=$(curl -s "https://api-japac-cxsiamp.xdr.jp.paloaltonetworks.com/public_api/v1/unified-cli/releases/download-link?os=linux&architecture=amd64" -H "x-xdr-auth-id: ${{ secrets.PCC_USER }}" -H "Authorization: ${{ secrets.PCC_PASS }}") && crtx_url=$(echo $crtx_resp | jq -r ".signed_url") && crtx_file=$(echo $crtx_resp | jq -r ".file_name") && curl -o $crtx_file $crtx_url 
+          sudo apt-get update
+          sudo apt-get install -y libhyperscan5
+
+      - name: Download cortexcli from the Prisma Cloud Compute Console
+        run: |
+          crtx_resp=$(curl -s "https://api-japac-cxsiamp.xdr.jp.paloaltonetworks.com/public_api/v1/unified-cli/releases/download-link?os=linux&architecture=amd64" -H "x-xdr-auth-id: ${{ secrets.PCC_USER }}" -H "Authorization: ${{ secrets.PCC_PASS }}") && crtx_url=$(echo $crtx_resp | jq -r ".signed_url") && crtx_file=$(echo $crtx_resp | jq -r ".file_name") && curl -o $crtx_file "$crtx_url" 
+          # 다운로드된 파일의 이름을 cortexcli로 통일하거나 원래 이름에 실행 권한을 줍니다.
+          # 기존 코드의 오류 방지를 위해 다운로드한 파일을 cortexcli로 이름 변경합니다.
+          mv "$crtx_file" ./cortexcli
           chmod a+x ./cortexcli
 
       - name: Build the image
@@ -36,4 +43,4 @@ jobs:
           docker build -t $IMAGE_NAME /home/runner/work/raymond/raymond/ 
 
       - name: Scan the image
-        run: ./cortexcli --api-base-url "https://api-japac-cxsiamp.xdr.jp.paloaltonetworks.com" --api-key-id "${{ secrets.PCC_USER }}"  --api-key "${{ secrets.PCC_PASS }}" image scan "$IMAGE_NAME" 
+        run: ./cortexcli --api-base-url "https://api-japac-cxsiamp.xdr.jp.paloaltonetworks.com" --api-key-id "${{ secrets.PCC_USER }}"  --api-key "${{ secrets.PCC_PASS }}" image scan "$IMAGE_NAME"
