@@ -30,8 +30,8 @@ jobs:
         run: |
           mkdir -p /home/runner/work/raymond/raymond/
           cat <<EOF | tee /home/runner/work/raymond/raymond/Dockerfile
-          FROM nginx:1.27
-          EXPOSE 80
+          FROM mechinsae/todo-app:v4
+          EXPOSE 3000
           CMD ["nginx", "-g", "daemon off;"]
           EOF
           docker build --no-cache -t $IMAGE_NAME /home/runner/work/raymond/raymond/ 
